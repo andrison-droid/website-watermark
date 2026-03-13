@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AndriZxcell - Ancient Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=IM+Fell+English+SC&display=swap');
+        
+        body {
+            margin: 0; padding: 0; min-height: 100vh;
+            font-family: 'Cinzel', serif;
+            color: #e0d0b0;
+            /* Tekstur Kegelapan Abadi */
+            background-color: #0a0a0a;
+            background-image: radial-gradient(circle at center, #1a1510 0%, #050505 100%);
+            background-attachment: fixed;
+        }
+
+        
+        body::before, body::after {
+            content: ""; position: fixed; left: 0; width: 100%; height: 100px; z-index: 5;
+            background: #1a1a1a; filter: grayscale(1) contrast(1.5); opacity: 0.1;
+            pointer-events: none;
+        }
+        body::before { top: 0; border-bottom: 2px solid #332a1a; }
+        body::after { bottom: 0; border-top: 2px solid #332a1a; }
+
+        .parchment-card {
+            background: rgba(15, 12, 10, 0.95);
+            border: 2px solid #8a7340;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 1), inset 0 0 20px rgba(138, 115, 64, 0.2);
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-family: 'IM Fell English SC', serif;
+            color: #d4af37;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            font-size: 3rem;
+            letter-spacing: 4px;
+        }
+
+        .ancient-input {
+            background: #000;
+            border: 1px solid #4a3c28;
+            color: #d4af37;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+
+        .btn-ancient {
+            background: #d4af37;
+            color: #000;
+            font-weight: 900;
+            text-transform: uppercase;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-ancient:hover {
+            background: #fff;
+            box-shadow: 0 0 25px #fff;
+        }
+
+        .logo-text {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #fff 0%, #d4af37 50%, #5a4010 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.8));
+            margin-bottom: -10px;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6">
+
+    <div class="text-center mb-10 animate-pulse">
+        <div class="logo-text">AndriZxcell</div>
+        <div class="text-[10px] tracking-[1em] text-[#8a7340] font-bold uppercase">Digital Immortal Entity</div>
+    </div>
+
+    <main class="w-full max-w-2xl parchment-card p-10 text-center relative overflow-hidden">
+        <div class="absolute top-0 left-0 p-2 text-[#4a3c28]">✦</div>
+        <div class="absolute top-0 right-0 p-2 text-[#4a3c28]">✦</div>
+        
+        <h2 class="text-2xl font-bold mb-4">ANCIENT EXTRACTOR</h2>
+        <p class="text-xs text-[#8a7340] mb-8 tracking-widest uppercase">Bypass Watermark Protocol v2.0</p>
+
+        <div class="flex flex-col gap-4">
+            <input type="text" id="videoUrl" placeholder="PASTE LINK HERE..." class="ancient-input w-full outline-none focus:border-[#d4af37]">
+            <button onclick="process()" class="btn-ancient py-4 tracking-[0.3em]">Invoke Power</button>
+        </div>
+
+        <div id="loader" class="hidden mt-10 animate-spin inline-block h-8 w-8 border-4 border-t-[#d4af37] border-black rounded-full"></div>
+        
+        <div id="result" class="hidden mt-10 text-left border-t border-[#4a3c28] pt-6">
+            </div>
+    </main>
+
+    <footer class="mt-20 text-center">
+        <div class="text-[10px] text-[#4a3c28] tracking-widest mb-2 uppercase">Created by the Hand of</div>
+        <div class="text-[#d4af37] font-bold tracking-widest text-lg">ANDRIIZXCELL</div>
+    </footer>
+
+    <script>
+        async function process() {
+            const url = document.getElementById('videoUrl').value;
+            const resDiv = document.getElementById('result');
+            const loader = document.getElementById('loader');
+
+            if(!url) return alert("Link Kosong!");
+
+            loader.classList.remove('hidden');
+            resDiv.classList.add('hidden');
+
+            try {
+                const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+
+                if(data.code === 0) {
+                    const video = data.data.play.startsWith('http') ? data.data.play : `https://www.tikwm.com${data.data.play}`;
+                    resDiv.innerHTML = `
+                        <div class="flex gap-4 items-center">
+                            <img src="${data.data.cover}" class="w-20 h-28 border border-[#d4af37] object-cover">
+                            <div>
+                                <div class="text-[10px] text-white font-bold mb-4 line-clamp-1">${data.data.title}</div>
+                                <a href="${video}" target="_blank" class="bg-[#d4af37] text-black px-4 py-2 text-[10px] font-black uppercase tracking-widest">Download No WM</a>
+                            </div>
+                        </div>
+                    `;
+                    resDiv.classList.remove('hidden');
+                } else { alert("Failed!"); }
+            } catch (e) { alert("Error!"); }
+            finally { loader.classList.add('hidden'); }
+        }
+    </script>
+</body>
+</html>
